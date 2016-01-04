@@ -46,6 +46,7 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& msg) {
     }
     else {
     	if (switchTf==1) {
+
     		selectedTf++;
     		if (selectedTf==tfs.size()) {
     			selectedTf=0;
@@ -53,10 +54,12 @@ void joyCallback(const sensor_msgs::Joy::ConstPtr& msg) {
            	cout<<"Switching "<<tfs[selectedTf]<<"\n";
 
     	}
+
 		double newX=xtfs[selectedTf]+threshold(msg->axes[0], DEAD_ZONE)*0.02*1.5;
 				double newY=ytfs[selectedTf]+threshold(msg->axes[1], DEAD_ZONE)*0.02*1.5;
     		xtfs[selectedTf]=newX;
     		ytfs[selectedTf]=newY;
+
     }
 
 
@@ -68,9 +71,11 @@ void sendPosition() {
         for (int i=0; i<tfs.size(); i++) {
          static tf::TransformBroadcaster br;
         
+         //ROS_INFO("Tf numero %d",i);
          tf::Transform transform;
          transform.setOrigin( tf::Vector3(xtfs[i], ytfs[i], 0.0) );
          tf::Quaternion q;
+
          q.setRPY(0, 0, 0);
          transform.setRotation(q);
          br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "map", tfs[i]));
@@ -80,20 +85,24 @@ void sendPosition() {
 }
 
 int main (int argc, char** argv) {
-    
-    for (int i=1; i<argc; i++) {
-        tfs.push_back(argv[i]);
-        cout<<"input "<<argv[i]<<"\n";
-        xtfs.push_back(0);
-        ytfs.push_back(0);
-    }
 
     ros::init(argc,argv,"tf_joypad");
+
+    ROS_INFO("Started tf_joypad");
     ros::NodeHandle n;
+
+    n.getParam("tf_joypad/simulated_agents",tfs);
+    ROS_INFO("Got %d agents",tfs.size());
+    for (int i=0; i<tfs.size();i++) {
+        xtfs.push_back(0);
+        ytfs.push_back(0);
+        ROS_INFO("- %s",tfs[i].c_str());
+    }
 
     boost::thread t(sendPosition);
     ros::Subscriber joy_sub= n.subscribe<sensor_msgs::Joy>("velocity_control", 10, joyCallback);
-
+    ROS_INFO("Subscribed to velocity control");
+    ROS_INFO("Ready");
     ros::spin();
     ros::shutdown();
 }
