@@ -1,28 +1,16 @@
-## check c++11 / c++0x
-include(CheckCXXCompilerFlag)
-check_cxx_compiler_flag("-std=c++11" COMPILER_SUPPORTS_CXX11)
-check_cxx_compiler_flag("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-if(COMPILER_SUPPORTS_CXX11)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-elseif(COMPILER_SUPPORTS_CXX0X)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-else()
-    message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
-endif()
-
-
 cmake_minimum_required(VERSION 2.8.3)
-project(pomdp)
+project(tinyxml2)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  rospy
 )
 
 ## System dependencies are found with CMake's conventions
-find_package(Boost REQUIRED COMPONENTS system)
+#find_package(Boost REQUIRED COMPONENTS system)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -92,8 +80,8 @@ find_package(Boost REQUIRED COMPONENTS system)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES pomdp
-  CATKIN_DEPENDS roscpp 
+  LIBRARIES tinyxml2
+  CATKIN_DEPENDS  roscpp rospy
 #  DEPENDS system_lib
 )
 
@@ -103,26 +91,25 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
+include_directories(include)
 include_directories(
-  include
   ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a cpp library
- add_library(pomdp
-   src/Pomdp.cpp
+add_library(tinyxml2
+   src/tinyxml2.cpp
  )
 
 ## Declare a cpp executable
-# add_executable(pomdp_node src/pomdp_node.cpp)
+ #add_executable(tinyxml2 src/TfJoypad.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(pomdp_node pomdp_generate_messages_cpp)
+# add_dependencies(tinyxml2_node tinyxml2_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
- target_link_libraries(pomdp
+ target_link_libraries(tinyxml2
    ${catkin_LIBRARIES}
  )
 
@@ -141,7 +128,7 @@ include_directories(
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS pomdp pomdp_node
+# install(TARGETS tinyxml2 tinyxml2_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -166,7 +153,7 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_pomdp.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_tinyxml2.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
