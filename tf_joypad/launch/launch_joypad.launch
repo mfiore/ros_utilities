@@ -1,7 +1,0 @@
-<launch>
-	<rosparam command="load" file="$(find common_parameters)/common_config.yaml" />
-	<include file="$(find ps_joypad)/launch/ps_joypad.launch" />
-	<node name="tf_joypad" pkg="tf_joypad" type="tf_joypad" output="screen" />
-
-    
-</launch>
